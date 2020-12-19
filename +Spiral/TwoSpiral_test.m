@@ -1,0 +1,27 @@
+clc
+clear all;
+N=1000;
+[x,y]=meshgrid(linspace(-1,1,N));
+d=0.3;
+[th,r]=cart2pol(x,y);
+[th1,r1]=cart2pol(x-d,y);
+[th2,r2]=cart2pol(x+d,y);
+NA=0.004;
+lambda=1.75e-5;
+D=400e-3;
+a=D/2/lambda;
+z=1/NA;
+R1=sqrt(r1.^2+z.^2);
+R2=sqrt(r2.^2+z.^2);
+zoneNum=a*(sqrt(1+z.^2)-z);
+Sph1=2*pi*R1*a;
+Sph2=2*pi*R2*a;
+ph1=th1+Sph1;
+ph2=-th2+Sph2;
+ph1(r>1)=NaN;
+I=abs(2+exp(1i*ph1)+exp(1i*ph2)).^2;
+thresh=8;
+I(I<thresh)=0;
+I(I>=thresh)=1;
+figure(1),mesh(x,y,I),xlabel('Normalized coordinates'),ylabel('Normalized coordinates'),zlabel('Phase/ rad');
+box on;grid off;axis equal;colorbar;
